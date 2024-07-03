@@ -8,6 +8,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.popov.portalOne.core.FindNumbers.*;
 
@@ -76,16 +78,18 @@ public class WindowView extends JFrame {
     private void showResult(ActionEvent event) {
         long start = System.currentTimeMillis();
 
-        long[] increasingAndDecreasing =increasingAndDecreasingSequenceOfNum();
-        long arithmeticMean = arithmeticMean();
-        long[] maxMinAndMedian = MaxMinMedian();
+        List<ArrayList<Long>> increasingAndDecreasing = increasingAndDecreasingSequenceOfNum();
+        ArrayList<Long> increasing = increasingAndDecreasing.get(0);
+        ArrayList<Long> decreasing = increasingAndDecreasing.get(1);
+        int arithmeticMean = arithmeticMean();
+        int[] maxMinAndMedian = MaxMinMedian();
 
         resultFieldSettings(maxMinAndMedian[0], "Maximum number");
         resultFieldSettings(maxMinAndMedian[1], "Minimum number");
         resultFieldSettings(maxMinAndMedian[2], "Median number");
         resultFieldSettings(arithmeticMean, "Arithmetic mean number");
-        resultFieldSettings(increasingAndDecreasing[0], "Increasing number");
-        resultFieldSettings(increasingAndDecreasing[1], "Decreasing number");
+        resultComboBoxSettings(increasing, "Increasing number");
+        resultComboBoxSettings(decreasing, "Decreasing number");
 
         double result =  (double) (System.currentTimeMillis() - start) / 1000;
         add(new JLabel("Time spent: " + String.format("%.2f", result) + " second"));
@@ -93,7 +97,17 @@ public class WindowView extends JFrame {
         RESULT_PANEL.revalidate();
     }
 
-    private void resultFieldSettings(long result, String value) {
+    private void resultComboBoxSettings(ArrayList<Long> list, String value) {
+        String[] listToBox = new String[list.size()];
+        for (int i = 0; i < listToBox.length; i++) {
+            listToBox[i] = list.get(i).toString();
+        }
+        JComboBox<String> boxList = new JComboBox<>(listToBox);
+        RESULT_PANEL.add(new JLabel(value));
+        RESULT_PANEL.add(boxList);
+    }
+
+    private void resultFieldSettings(int result, String value) {
         JTextField field = new JTextField(8);
         field.setText(String.valueOf(result));
         field.setEnabled(false);

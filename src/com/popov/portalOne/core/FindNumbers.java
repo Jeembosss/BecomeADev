@@ -1,13 +1,14 @@
 package com.popov.portalOne.core;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class FindNumbers {
     public static List<Integer> DATA;
 
-    public static long arithmeticMean() {
-        long arithmeticMean = 0;
+    public static int arithmeticMean() {
+        int arithmeticMean = 0;
         for (Integer num : DATA) {
             arithmeticMean += num;
         }
@@ -15,17 +16,19 @@ public class FindNumbers {
         return arithmeticMean;
     }
 
-    public static long[] increasingAndDecreasingSequenceOfNum() {
+    public static List <ArrayList<Long>> increasingAndDecreasingSequenceOfNum() {
         int maxIncreasingLength = 1;
         int currentIncreasingLength = 1;
         int maxDecreasingLength = 1;
         int currentDecreasingLength = 1;
-
+        int endIncreasing = 0;
+        int endDecreasing = 0;
         for (int i = 1; i < DATA.size(); i++) {
             if (DATA.get(i) > DATA.get(i - 1)) {
                 currentIncreasingLength++;
             } else {
                 if (currentIncreasingLength > maxIncreasingLength) {
+                    endIncreasing = i - 1;
                     maxIncreasingLength = currentIncreasingLength;
                 }
                 currentIncreasingLength = 1;
@@ -35,26 +38,41 @@ public class FindNumbers {
                 currentDecreasingLength++;
             } else {
                 if (currentDecreasingLength > maxDecreasingLength) {
+                    endDecreasing = i - 1;
                     maxDecreasingLength = currentDecreasingLength;
                 }
                 currentDecreasingLength = 1;
             }
-
         }
         if (currentIncreasingLength > maxIncreasingLength) {
+            endIncreasing = DATA.size() - 1;
             maxIncreasingLength = currentIncreasingLength;
         }
         if (currentDecreasingLength > maxDecreasingLength) {
+            endDecreasing = DATA.size() - 1;
             maxDecreasingLength = currentDecreasingLength;
         }
-        return new long[]{maxIncreasingLength, maxDecreasingLength};
+        ArrayList<Long> IncreasingResult = new ArrayList<>();
+        ArrayList<Long> DecreasingResult = new ArrayList<>();
+        for (int i = 1; i < maxIncreasingLength; i++) {
+            IncreasingResult.add(Long.valueOf(DATA.get(endIncreasing - maxIncreasingLength + i)));
+        }
+
+        for (int i = 1; i < maxDecreasingLength; i++) {
+            DecreasingResult.add(Long.valueOf(DATA.get(endDecreasing - maxDecreasingLength +  i)));
+        }
+
+        List <ArrayList<Long>> results = new ArrayList<>();
+        results.add(IncreasingResult);
+        results.add(DecreasingResult);
+        return results;
     }
 
-    public static long[] MaxMinMedian() {
+    public static int[] MaxMinMedian() {
         Collections.sort(DATA);
-        long median;
-        long max = DATA.get(DATA.size() - 1);
-        long min = DATA.get(0);
+        int median;
+        int max = DATA.get(DATA.size() - 1);
+        int min = DATA.get(0);
 
         if (DATA.size() % 2 == 0) {
             int mid1 = DATA.size() / 2;
@@ -65,7 +83,7 @@ public class FindNumbers {
             median = DATA.get(mid);
         }
 
-        return new long[]{max, min, median};
+        return new int[]{max, min, median};
     }
 
 
